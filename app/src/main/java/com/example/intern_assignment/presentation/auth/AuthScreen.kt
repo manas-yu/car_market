@@ -66,7 +66,8 @@ fun AuthScreen(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = if (isBuyer) "Buy Your Dream Car!!" else "Sell Your Car Now!!",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.displayMedium
+            style = MaterialTheme.typography.displayMedium,
+            color = if (isBuyer) MaterialTheme.colorScheme.primary else Color.White
         )
         Spacer(modifier = Modifier.weight(0.5f))
         CustomTextField(value = email, onValueChange = {
@@ -78,7 +79,12 @@ fun AuthScreen(
             )
         },
             placeholder = {
-                Text(text = if (isSignUp) "New Email" else "Email")
+                Text(
+                    text = if (isSignUp) "New Email" else {
+                        if (isBuyer) "User Email"
+                        else "Seller Email"
+                    }
+                )
             }
         )
         CustomTextField(value = password, onValueChange = {

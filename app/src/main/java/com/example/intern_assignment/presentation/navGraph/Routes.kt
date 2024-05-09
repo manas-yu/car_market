@@ -6,4 +6,5 @@ sealed class Routes(val route: String) {
     data object SellerScreen : Routes("seller_screen")
     data object DetailsScreen : Routes("details_screen")
     data object AddCarScreen : Routes("add_car_screen")
+    data object LoadingScreen : Routes("loading_screen")
 }

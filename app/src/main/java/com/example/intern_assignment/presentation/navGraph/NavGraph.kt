@@ -48,7 +48,6 @@ fun NavGraph() {
     val startDestination = viewModel.startDestination
     LaunchedEffect(Unit) {
         viewModel.isUserLoggedIn(context)
-        viewModel.changeUserState(UserState.NullState)
     }
 
     Scaffold(
@@ -62,6 +61,11 @@ fun NavGraph() {
                 navController = navController, startDestination = startDestination,
                 modifier = Modifier.padding(bottom = bottomPadding)
             ) {
+                composable(route = Routes.LoadingScreen.route) {
+                    com.example.intern_assignment.presentation.LoadingScreen(viewModel = viewModel) {
+                        navController.navigate(viewModel.startDestination)
+                    }
+                }
                 composable(
                     route = Routes.DetailsScreen.route + "/{index}",
                     arguments = listOf(navArgument("index") { type = NavType.IntType })

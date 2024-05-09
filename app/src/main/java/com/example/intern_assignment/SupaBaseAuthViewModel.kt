@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class SupabaseAuthViewModel : ViewModel() {
     private val _userState = mutableStateOf<UserState>(UserState.NullState)
     val userState: State<UserState> = _userState
-    var startDestination = Routes.AuthScreen.route
+    var startDestination = Routes.LoadingScreen.route
     var currentUser: User = User("", "", true, "")
     fun changeUserState(userState: UserState) {
         _userState.value = userState
@@ -151,6 +151,7 @@ class SupabaseAuthViewModel : ViewModel() {
                 val token = getToken(context)
                 val isBuyer = getIsBuyer(context)
                 if (token.isNullOrEmpty()) {
+                    startDestination = Routes.AuthScreen.route
                     _userState.value = UserState.Success("User not logged in!")
                 } else {
                     val user = client.auth.retrieveUser(token)
@@ -163,14 +164,14 @@ class SupabaseAuthViewModel : ViewModel() {
                     )
 
                     saveToken(context)
-                    _userState.value = UserState.Success("User already logged in!")
+
                     println("isBuyer :  $isBuyer")
                     startDestination = if (isBuyer) {
                         Routes.BuyerScreen.route
                     } else {
                         Routes.SellerScreen.route
                     }
-
+                    _userState.value = UserState.Success("User already logged in!")
                 }
             } catch (e: RestException) {
                 _userState.value = UserState.Error(e.error)
