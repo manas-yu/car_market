@@ -17,7 +17,6 @@ class SellerViewModel : ViewModel() {
     private val _userState = mutableStateOf<UserState>(UserState.Loading)
     val userState: State<UserState> = _userState
     var contentList = mutableListOf<Car>()
-    var imageUrls = mutableListOf<String>()
     private fun readPublicFile(
         bucketName: String = "cars",
         fileName: String,
@@ -55,8 +54,6 @@ class SellerViewModel : ViewModel() {
                     }
                     car.imageUrl = url
                 }
-                imageUrls = urls
-                println("imageUrls: $imageUrls")
                 println("contentList: $contentList")
                 _userState.value = UserState.Success("data fetched successfully")
             } catch (e: Exception) {

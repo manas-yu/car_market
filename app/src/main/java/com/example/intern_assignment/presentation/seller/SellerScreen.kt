@@ -35,7 +35,7 @@ import com.example.intern_assignment.utils.Dimens.ExtraSmallPadding2
 
 @Composable
 fun SellerScreen(
-    navigateToDetails: (Car, String) -> Unit,
+    navigateToDetails: (Car) -> Unit,
     animatedVisibilityScope: AnimatedVisibilityScope,
     sellerViewModel: SellerViewModel,
     viewModel: SupabaseAuthViewModel, onLogout: () -> Unit, navigateToAddCar: () -> Unit
@@ -125,13 +125,11 @@ fun SellerScreen(
                         sellerViewModel.contentList.forEachIndexed { index, car ->
 
                             println("content size : " + sellerViewModel.contentList.size)
-                            println("image urls " + sellerViewModel.imageUrls.size)
                             CarCard(
                                 car = car,
                                 navigateToDetails = {
-                                    navigateToDetails(car, sellerViewModel.imageUrls[index])
-                                },
-                                imageUrl = sellerViewModel.imageUrls[index]
+                                    navigateToDetails(car)
+                                }
                             )
                         }
                     }

@@ -33,7 +33,7 @@ import com.example.intern_assignment.utils.Dimens
 
 @Composable
 fun CarCard(
-    car: Car, navigateToDetails: () -> Unit, imageUrl: String
+    car: Car, navigateToDetails: () -> Unit
 ) {
     var liked by remember {
         mutableStateOf(false)
@@ -53,7 +53,7 @@ fun CarCard(
         Column {
             AsyncImage(
                 modifier = Modifier.height(150.dp),
-                model = imageUrl,
+                model = car.imageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

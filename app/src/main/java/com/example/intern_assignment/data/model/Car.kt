@@ -21,5 +21,6 @@ data class Car(
     val carMileage: String,
     @SerialName("image_filename")
     val imageFileName: String,
+    var imageUrl: String? = null
 
-    ) : Parcelable
+) : Parcelable

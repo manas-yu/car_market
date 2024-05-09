@@ -42,7 +42,6 @@ import com.example.intern_assignment.presentation.details.components.Description
 
 @Composable
 fun DetailsScreen(
-    imageUrl: String,
     navigateBack: () -> Unit,
     car: Car,
     animatedVisibilityScope: AnimatedVisibilityScope
@@ -82,7 +81,7 @@ fun DetailsScreen(
             }
             AsyncImage(
                 modifier = Modifier.height(150.dp),
-                model = imageUrl,
+                model = car.imageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

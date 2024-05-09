@@ -54,16 +54,13 @@ fun NavGraph() {
                 modifier = Modifier.padding(bottom = bottomPadding)
             ) {
                 composable(
-                    route = "details_screen/{imageUrl}",
-                    arguments = listOf(navArgument("imageUrl") {
-                        type = NavType.StringType
-                    })
-                ) { backStack ->
-                    val url = backStack.arguments?.getString("imageUrl") ?: ""
+                    route = Routes.DetailsScreen.route,
+                )
+                { backStack ->
                     navController.previousBackStackEntry?.savedStateHandle?.get<Car?>("car")
                         ?.let { car ->
                             DetailsScreen(
-                                imageUrl = url,
+
                                 navigateBack = {
                                     navController.popBackStack()
                                 },
@@ -102,8 +99,8 @@ fun NavGraph() {
                 }
                 composable(route = Routes.SellerScreen.route) {
                     SellerScreen(
-                        navigateToDetails = { car, url ->
-                            navigateToDetails(navController, car, url)
+                        navigateToDetails = { car ->
+                            navigateToDetails(navController, car)
                         },
                         sellerViewModel = sellerViewModel,
                         animatedVisibilityScope = this,
@@ -124,10 +121,10 @@ fun NavGraph() {
     }
 }
 
-private fun navigateToDetails(navController: NavController, car: Car, imageUrl: String) {
+private fun navigateToDetails(navController: NavController, car: Car) {
     navController.currentBackStackEntry?.savedStateHandle?.set(
         "car",
         car
     )
-    navController.navigate("details_screen/$imageUrl")
+    navController.navigate(Routes.DetailsScreen.route)
 }
