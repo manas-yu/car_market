@@ -1,6 +1,7 @@
 package com.example.intern_assignment.presentation.auth
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -43,20 +45,22 @@ fun AuthScreen(
     viewModel: SupabaseAuthViewModel,
     navigateToHomePage: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+    var rePassWord by remember { mutableStateOf("") }
+    var isBuyer by remember { mutableStateOf(true) }
+    var isSignUp by remember {
+        mutableStateOf(false)
+
+    }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
             .statusBarsPadding()
-    ) {
-        val context = LocalContext.current
-        var rePassWord by remember { mutableStateOf("") }
-        var isBuyer by remember { mutableStateOf(true) }
-        var isSignUp by remember {
-            mutableStateOf(false)
 
-        }
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
+    ) {
+
         Spacer(modifier = Modifier.weight(0.3f))
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -166,6 +170,7 @@ fun AuthScreen(
 
             is UserState.Success -> {
                 viewModel.changeUserState(UserState.NullState)
+                println("NNavigating to homescreen")
                 navigateToHomePage(isBuyer)
 
             }

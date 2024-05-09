@@ -1,6 +1,7 @@
 package com.example.intern_assignment.presentation.common
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -25,11 +27,16 @@ import com.example.intern_assignment.R
 fun CustomTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    prefix: @Composable () -> Unit,
+    prefix: @Composable () -> Unit, suffix: @Composable () -> Unit = {},
     placeholder: @Composable () -> Unit,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     OutlinedTextField(
+        suffix = {
+
+            suffix()
+
+        },
         keyboardOptions = keyboardOptions,
         placeholder = placeholder,
         prefix = prefix,

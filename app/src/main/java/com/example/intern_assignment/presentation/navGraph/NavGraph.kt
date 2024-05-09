@@ -3,12 +3,17 @@ package com.example.intern_assignment.presentation.navGraph
 import android.content.Intent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -20,9 +25,11 @@ import com.example.basic_assignment.data.model.Content
 import com.example.intern_assignment.SupabaseAuthViewModel
 import com.example.intern_assignment.SupabaseViewModel
 import com.example.intern_assignment.data.model.Car
+import com.example.intern_assignment.data.model.UserState
 import com.example.intern_assignment.presentation.auth.AuthScreen
 import com.example.intern_assignment.presentation.seller.AddCarScreen
 import com.example.intern_assignment.presentation.buyer.BuyerScreen
+import com.example.intern_assignment.presentation.buyer.BuyerViewModel
 import com.example.intern_assignment.presentation.details.DetailsScreen
 import com.example.intern_assignment.presentation.seller.SellerScreen
 import com.example.intern_assignment.presentation.seller.SellerViewModel
@@ -36,17 +43,19 @@ fun NavGraph() {
     val sellerViewModel = SellerViewModel()
     val viewModel = SupabaseAuthViewModel()
     val supabaseViewModel = SupabaseViewModel()
+    val buyerViewModel = BuyerViewModel()
     val context = LocalContext.current
     val startDestination = viewModel.startDestination
     LaunchedEffect(Unit) {
-//        viewModel.isUserLoggedIn(context)
-//        viewModel.changeUserState(UserState.NullState)
+        viewModel.isUserLoggedIn(context)
+        viewModel.changeUserState(UserState.NullState)
     }
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-
-        ) {
+        modifier = Modifier
+            .fillMaxSize()
+    )
+    {
         val bottomPadding = it.calculateBottomPadding()
         SharedTransitionLayout {
             NavHost(
@@ -94,10 +103,16 @@ fun NavGraph() {
                 }
 
                 composable(route = Routes.BuyerScreen.route) {
-                    BuyerScreen(viewModel, onLogout = {
-                        navController.popBackStack()
-                        navController.navigate(Routes.AuthScreen.route)
-                    })
+                    BuyerScreen(
+                        navigateToDetails = { car, index ->
+                            navigateToDetails(navController, car, index)
+                        },
+                        buyerViewModel = buyerViewModel,
+                        animatedVisibilityScope = this,
+                        viewModel = viewModel, onLogout = {
+                            navController.popBackStack()
+                            navController.navigate(Routes.AuthScreen.route)
+                        })
                 }
                 composable(route = Routes.SellerScreen.route) {
                     SellerScreen(

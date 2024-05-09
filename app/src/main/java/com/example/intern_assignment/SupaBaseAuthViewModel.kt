@@ -105,6 +105,7 @@ class SupabaseAuthViewModel : ViewModel() {
 
                 saveToken(context)
                 saveIsBuyer(context, isBuyer)
+
                 val token = getToken(context)
                 if (!token.isNullOrEmpty()) {
                     val user = client.auth.retrieveUser(token)
@@ -163,6 +164,7 @@ class SupabaseAuthViewModel : ViewModel() {
 
                     saveToken(context)
                     _userState.value = UserState.Success("User already logged in!")
+                    println("isBuyer :  $isBuyer")
                     startDestination = if (isBuyer) {
                         Routes.BuyerScreen.route
                     } else {

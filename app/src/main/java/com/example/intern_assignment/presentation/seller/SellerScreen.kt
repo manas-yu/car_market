@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -37,6 +38,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -59,8 +61,8 @@ fun SharedTransitionScope.SellerScreen(
     sellerViewModel: SellerViewModel,
     viewModel: SupabaseAuthViewModel, onLogout: () -> Unit, navigateToAddCar: () -> Unit
 ) {
-    var liked by remember {
-        mutableStateOf(false)
+    val liked = remember {
+        mutableStateOf(emptyList<Int>())
     }
     LaunchedEffect(Unit) {
         sellerViewModel.getContent(viewModel.currentUser.id)
@@ -142,102 +144,113 @@ fun SharedTransitionScope.SellerScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .verticalScroll(scrollableState)
+                            .verticalScroll(scrollableState),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        sellerViewModel.contentList.forEachIndexed { index, car ->
+                        if (sellerViewModel.contentList.isEmpty()) {
+                            Text(text = "You have listed no cars yet!")
+                        } else
+                            sellerViewModel.contentList.forEachIndexed { index, car ->
 
-                            println("content size : " + sellerViewModel.contentList.size)
-                            Card(
-                                shape = RoundedCornerShape(16.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.DarkGray
-                                ),
-                                modifier = Modifier
-                                    .padding(16.dp)
-                                    .clickable {
-                                        navigateToDetails(car, index)
-                                    }
-                                    .wrapContentHeight()
-                            ) {
-                                Column {
-                                    AsyncImage(
-                                        modifier = Modifier
-                                            .height(150.dp)
-                                            .sharedElement(
-                                                state = rememberSharedContentState(key = "imageUrl/${car.imageUrl}/$index"),
-                                                animatedVisibilityScope = animatedVisibilityScope,
+                                println("content size : " + sellerViewModel.contentList.size)
+                                Card(
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = Color.DarkGray
+                                    ),
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                        .clickable {
+                                            navigateToDetails(car, index)
+                                        }
+                                        .wrapContentHeight()
+                                ) {
+                                    Column {
+                                        AsyncImage(
+                                            modifier = Modifier
+                                                .height(150.dp)
+                                                .sharedElement(
+                                                    state = rememberSharedContentState(key = "imageUrl/${car.imageUrl}/$index"),
+                                                    animatedVisibilityScope = animatedVisibilityScope,
 
-                                                ),
-                                        model = car.imageUrl,
-                                        contentDescription = null,
-                                        contentScale = ContentScale.Crop
-                                    )
-                                    Row(
-                                        modifier = Modifier.padding(
-                                            start = 12.dp,
-                                            top = 9.dp,
-                                            bottom = 11.dp,
-                                            end = ExtraSmallPadding2
+                                                    ),
+                                            model = car.imageUrl,
+                                            contentDescription = null,
+                                            contentScale = ContentScale.Crop
                                         )
-                                    ) {
-                                        Column {
-                                            Text(
-                                                text = car.carBrand,
-                                                style = MaterialTheme.typography.titleMedium,
-                                                modifier = Modifier.sharedElement(
-                                                    state = rememberSharedContentState(key = "carBrand/${car.carBrand}/$index"),
-                                                    animatedVisibilityScope = animatedVisibilityScope,
-
-                                                    )
+                                        Row(
+                                            modifier = Modifier.padding(
+                                                start = 12.dp,
+                                                top = 9.dp,
+                                                bottom = 11.dp,
+                                                end = ExtraSmallPadding2
                                             )
-                                            Text(
-                                                text = car.carModel,
-                                                fontWeight = FontWeight.Bold,
-                                                style = MaterialTheme.typography.titleLarge,
-                                                modifier = Modifier.sharedElement(
-                                                    state = rememberSharedContentState(key = "carModel/${car.carModel}/$index"),
-                                                    animatedVisibilityScope = animatedVisibilityScope,
+                                        ) {
+                                            Column {
+                                                Text(
+                                                    text = car.carBrand,
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    modifier = Modifier.sharedElement(
+                                                        state = rememberSharedContentState(key = "carBrand/${car.carBrand}/$index"),
+                                                        animatedVisibilityScope = animatedVisibilityScope,
 
-                                                    )
-                                            )
+                                                        )
+                                                )
+                                                Text(
+                                                    text = car.carModel,
+                                                    fontWeight = FontWeight.Bold,
+                                                    style = MaterialTheme.typography.titleLarge,
+                                                    modifier = Modifier.sharedElement(
+                                                        state = rememberSharedContentState(key = "carModel/${car.carModel}/$index"),
+                                                        animatedVisibilityScope = animatedVisibilityScope,
+
+                                                        )
+                                                )
+
+                                            }
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            Column {
+                                                Text(
+                                                    text = "₹${car.carCost} Lakhs",
+                                                    style = MaterialTheme.typography.titleLarge,
+                                                    modifier = Modifier.sharedElement(
+                                                        state = rememberSharedContentState(key = "carCost/${car.carCost}/$index"),
+                                                        animatedVisibilityScope = animatedVisibilityScope,
+
+                                                        )
+                                                )
+                                                Text(
+                                                    text = "${car.carMileage} L/100Km",
+                                                    style = MaterialTheme.typography.titleMedium,
+                                                    color = MaterialTheme.colorScheme.primary,
+                                                    modifier = Modifier.sharedElement(
+                                                        state = rememberSharedContentState(key = "carMileage/${car.carMileage}/$index"),
+                                                        animatedVisibilityScope = animatedVisibilityScope,
+
+                                                        )
+                                                )
+                                            }
+                                            IconButton(onClick = {
+                                                liked.value = liked.value.toMutableList().apply {
+                                                    if (contains(index)) {
+                                                        remove(index)
+                                                    } else {
+                                                        add(index)
+                                                    }
+                                                }
+                                            }) {
+                                                Icon(
+                                                    imageVector = if (!liked.value.contains(index)) Icons.Default.FavoriteBorder else Icons.Default.Favorite,
+                                                    contentDescription = null,
+                                                    tint = if (liked.value.contains(index)) MaterialTheme.colorScheme.primary else Color.Black
+                                                )
+                                            }
 
                                         }
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Column {
-                                            Text(
-                                                text = "₹${car.carCost} Lakhs",
-                                                style = MaterialTheme.typography.titleLarge,
-                                                modifier = Modifier.sharedElement(
-                                                    state = rememberSharedContentState(key = "carCost/${car.carCost}/$index"),
-                                                    animatedVisibilityScope = animatedVisibilityScope,
-
-                                                    )
-                                            )
-                                            Text(
-                                                text = "${car.carMileage} L/100Km",
-                                                style = MaterialTheme.typography.titleMedium,
-                                                color = MaterialTheme.colorScheme.primary,
-                                                modifier = Modifier.sharedElement(
-                                                    state = rememberSharedContentState(key = "carMileage/${car.carMileage}/$index"),
-                                                    animatedVisibilityScope = animatedVisibilityScope,
-
-                                                    )
-                                            )
-                                        }
-                                        IconButton(onClick = {
-                                            liked = !liked
-                                        }) {
-                                            Icon(
-                                                imageVector = if (!liked) Icons.Default.FavoriteBorder else Icons.Default.Favorite,
-                                                contentDescription = null,
-                                                tint = if (liked) MaterialTheme.colorScheme.primary else Color.Black
-                                            )
-                                        }
-
                                     }
                                 }
                             }
-                        }
                     }
 
                 }
