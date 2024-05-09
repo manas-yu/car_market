@@ -40,13 +40,15 @@ fun DescriptionCard() {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = Color.DarkGray
+        ),
         modifier = Modifier
             .padding(16.dp)
             .clickable { expanded = !expanded }
             .fillMaxWidth()
-            .height(if (expanded) 380.dp else 150.dp)
-            .animateContentSize()
-            .background(Color.DarkGray),
+            .height(if (expanded) 450.dp else 300.dp)
+            .animateContentSize(),
         elevation = CardDefaults.cardElevation(8.dp),
         shape = RoundedCornerShape(16.dp)
     ) {

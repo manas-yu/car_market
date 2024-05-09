@@ -54,9 +54,11 @@ fun NavGraph() {
                 modifier = Modifier.padding(bottom = bottomPadding)
             ) {
                 composable(
-                    route = Routes.DetailsScreen.route,
+                    route = Routes.DetailsScreen.route + "/{index}",
+                    arguments = listOf(navArgument("index") { type = NavType.IntType })
                 )
                 { backStack ->
+                    val index = backStack.arguments?.getInt("index") ?: 0
                     navController.previousBackStackEntry?.savedStateHandle?.get<Car?>("car")
                         ?.let { car ->
                             DetailsScreen(
@@ -65,7 +67,7 @@ fun NavGraph() {
                                     navController.popBackStack()
                                 },
                                 car = car,
-                                animatedVisibilityScope = this,
+                                animatedVisibilityScope = this, index = index
                             )
                         }
 
@@ -99,8 +101,8 @@ fun NavGraph() {
                 }
                 composable(route = Routes.SellerScreen.route) {
                     SellerScreen(
-                        navigateToDetails = { car ->
-                            navigateToDetails(navController, car)
+                        navigateToDetails = { car, index ->
+                            navigateToDetails(navController, car, index)
                         },
                         sellerViewModel = sellerViewModel,
                         animatedVisibilityScope = this,
@@ -121,10 +123,10 @@ fun NavGraph() {
     }
 }
 
-private fun navigateToDetails(navController: NavController, car: Car) {
+private fun navigateToDetails(navController: NavController, car: Car, index: Int) {
     navController.currentBackStackEntry?.savedStateHandle?.set(
         "car",
         car
     )
-    navController.navigate(Routes.DetailsScreen.route)
+    navController.navigate(Routes.DetailsScreen.route + "/$index")
 }
